@@ -3,7 +3,7 @@
         <ul>
             {% for student in students %}
             <li>
-                {{ student }}<br/>
+                {{ student.id }} - {{ student.name }} {{ student.surname }}<br/>
             </li>
             {% endfor %}
         </ul>

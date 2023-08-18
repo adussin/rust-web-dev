@@ -1,32 +1,32 @@
 
-pub mod lectager {
-    use axum::{
-        response::Html,
-    };
-    use minijinja::{
-        context, Environment,
-    };
-    
-    fn get_students() -> Vec<&'static str> {
-        let mut students:  Vec<&'static str> = Vec::with_capacity(5);
-        students.push("Alice");
-        students.push("Beatrix");
-        students.push("Charlotte");
-        students.push("Diana");
-        
-        students
-    }
 
-    fn get_lectures_of_student(){
-        
-    }
-    pub fn app(env: Environment<'_>) -> Html<String>{
-        let students: Vec<&'static str> = get_students();
-        let tmpl = env.get_template("lectager/index.html").unwrap();
-        
-        Html(tmpl.render(context! {
-            students => students,
-        }).unwrap())
+mod dbcreation;
+mod models{
+    pub mod student;
+}
+
+use axum::{
+    response::Html,
+};
+use minijinja::{
+    context, Environment,
+};
+use sqlite;
+
+use models::student::Student;
+
+pub fn app(env: Environment<'_>) -> Html<String>{
+
+    dbcreation::create_db();
+    dbcreation::populate();
+
+    let conn = sqlite::open(":lectager:").unwrap();
+
+    let students: Vec<Student> = models::student::get_all(conn);
+    let tmpl = env.get_template("lectager/index.html").unwrap();
     
-    }
+    Html(tmpl.render(context! {
+        students => students,
+    }).unwrap())
+
 }

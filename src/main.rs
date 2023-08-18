@@ -11,7 +11,6 @@ use minijinja::{
 };
 
 pub mod lectager;
-use crate::lectager::lectager::app;
 
 #[tokio::main]
 async fn main() {   
@@ -65,5 +64,5 @@ async fn index(State(env): State<Environment<'_>>) -> Html<String> {
 }
 
 async fn lectager(State(env): State<Environment<'_>>) -> Html<String> {
-    app(env)
+    lectager::app(env)
 }
