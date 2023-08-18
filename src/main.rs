@@ -10,6 +10,9 @@ use minijinja::{
     context, Environment, Error, ErrorKind,
 };
 
+pub mod lectager;
+use crate::lectager::lectager::app;
+
 #[tokio::main]
 async fn main() {   
     let mut env = Environment::new();
@@ -40,12 +43,11 @@ async fn main() {
             }
         }
     });
-
     
     // build our application with a single route
     let app = Router::new()
             .route("/", get(index))
-            .route("/:profile", get(profile))
+            .route("/lectager", get(lectager))
             .with_state(env);
 
     // run it with hyper on localhost:3000
@@ -55,16 +57,13 @@ async fn main() {
         .unwrap();
 }
 
-async fn index(State(env): State<Environment<'_>>) -> String {
+async fn index(State(env): State<Environment<'_>>) -> Html<String> {
     let tmpl = env.get_template("index.html").unwrap();
-    tmpl.render(context! {
+    Html(tmpl.render(context! {
         name => "Diocane"
-    }).unwrap()
+    }).unwrap())
 }
 
-async fn profile(State(env): State<Environment<'_>>, Path(profile): Path<String>) -> Html<String> {
-    let tmpl = env.get_template("profile.html").unwrap();
-    Html(tmpl.render(context! {
-        profile => profile
-    }).unwrap())
+async fn lectager(State(env): State<Environment<'_>>) -> Html<String> {
+    app(env)
 }
