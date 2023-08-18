@@ -20,7 +20,7 @@ pub fn app(env: Environment<'_>) -> Html<String>{
     dbcreation::create_db();
     dbcreation::populate();
 
-    let conn = sqlite::open(":lectager:").unwrap();
+    let conn = sqlite::open(":lectager.db:").unwrap();
 
     let students: Vec<Student> = models::student::get_all(conn);
     let tmpl = env.get_template("lectager/index.html").unwrap();
