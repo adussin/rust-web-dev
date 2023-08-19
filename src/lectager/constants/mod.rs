@@ -1,0 +1,1 @@
+pub const DBNAME: &str = "lectager.db";

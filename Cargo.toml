@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.20"
+chrono = "0.4.26"
 hyper = { version = "0.14.27", features = ["full"] }
 minijinja = { version = "1.0.6", features = ["loader"] }
 serde = { version = "1.0.183", features = ["derive"] }

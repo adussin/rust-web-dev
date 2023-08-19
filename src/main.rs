@@ -3,7 +3,7 @@ use std::fs;
 use axum::{
     response::Html,
     routing::get,
-    extract::{State, Path},
+    extract::{State},
     Router,
 };
 use minijinja::{
@@ -14,6 +14,20 @@ pub mod lectager;
 
 #[tokio::main]
 async fn main() {   
+    
+    let lectager_routes = lectager::get_routes();
+    let app = Router::new()
+            .route("/", get(index))
+            .nest("/lectager", lectager_routes); // Sub with Route (like django's view importation)
+
+    // run it with hyper on localhost:3000
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+}
+
+fn get_env() -> Environment<'static> {
     let mut env = Environment::new();
     let template_path = std::env::current_dir().unwrap().join("static/templates");
     //println!("{}", template_path.display());
@@ -42,27 +56,13 @@ async fn main() {
             }
         }
     });
-    
-    // build our application with a single route
-    let app = Router::new()
-            .route("/", get(index))
-            .route("/lectager", get(lectager))
-            .with_state(env);
 
-    // run it with hyper on localhost:3000
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    env
 }
-
-async fn index(State(env): State<Environment<'_>>) -> Html<String> {
+async fn index() -> Html<String> {
+    let env = get_env();
     let tmpl = env.get_template("index.html").unwrap();
     Html(tmpl.render(context! {
         name => "Diocane"
     }).unwrap())
-}
-
-async fn lectager(State(env): State<Environment<'_>>) -> Html<String> {
-    lectager::app(env)
 }
