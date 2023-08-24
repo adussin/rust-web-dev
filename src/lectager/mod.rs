@@ -10,9 +10,10 @@ mod models{
 }
 
 use axum::{
-    response::Html,
+    response::{Html, IntoResponse},
+    http::{header, StatusCode, HeaderMap},
     Router,
-    routing::get,
+    routing::get, extract::Path,
 };
 use minijinja::{
     context, Environment, Error, ErrorKind,
@@ -24,6 +25,7 @@ use models::student::Student;
 pub fn get_routes() -> Router{
     Router::new()
     .route("/", get(app))
+    .route("/_static/*path", get(handle_assets))
 }
 
 fn get_env() -> Environment<'static> {
@@ -71,4 +73,22 @@ pub async fn app() -> Html<String>{
         students => students,
     }).unwrap())
 
+}
+
+static STYLES_CSS: &str = include_str!("static/css/styles.css");
+static FAVICON: &str = include_str!("static/favicon.svg");
+
+async fn handle_assets(Path(path): Path<String>) -> impl IntoResponse {
+    let mut headers = HeaderMap::new();
+    println!("{}", path.as_str());
+    match  path.as_str(){
+        "css/styles.css" => {
+            headers.insert(header::CONTENT_TYPE, "text/css".parse().unwrap());
+            (StatusCode::OK, headers, STYLES_CSS)
+        },
+        "favicon.svg" => {
+            (StatusCode::OK, headers, FAVICON)
+        },
+        _ => (StatusCode::NOT_FOUND, headers, ""),
+    }
 }

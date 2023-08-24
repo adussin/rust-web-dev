@@ -1,0 +1,33 @@
+
+.container {
+    height: auto;
+    width: 40%;
+    overflow-x: scroll;
+    outline-style: solid;
+    outline-color: purple;
+}
+
+div#students{
+
+}
+div#lessons.columnheaders{
+    
+}
+
+ul#students {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li#students {
+   
+}
+
+li#students.even {
+    background-color:aliceblue;
+}
+
+li#students.odd {
+    background-color:lightgrey;
+}

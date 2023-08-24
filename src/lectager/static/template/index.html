@@ -1,11 +1,22 @@
-<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="lectager/_static/css/styles.css" />
+        <link rel="icon" type="image/x-icon" href="lectager/_static/favicon.svg" />
+        <title>Template</title>
+    </head>
     <body>
-        <ul>
-            {% for student in students %}
-            <li>
-                {{ student.id }} - {{ student.name }} {{ student.surname }}<br/>
-            </li>
-            {% endfor %}
-        </ul>
+        <div id="students" class="container">
+            <ul id="students">
+                {% for student in students %}
+                    <li id="students" class="{{ loop.cycle('odd', 'even') }}"> 
+                    {{ student.id }} - {{ student.name }} {{ student.surname }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="lessons" class="container">
+            
+        </div>
     </body>
 </html>
+

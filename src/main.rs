@@ -18,7 +18,7 @@ async fn main() {
     let lectager_routes = lectager::get_routes();
     let app = Router::new()
             .route("/", get(index))
-            .nest("/lectager", lectager_routes); // Sub with Route (like django's view importation)
+            .nest("/lectager", lectager_routes); // like django's view importation
 
     // run it with hyper on localhost:3000
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
